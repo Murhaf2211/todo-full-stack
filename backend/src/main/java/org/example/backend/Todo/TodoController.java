@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/todo")
@@ -28,16 +28,16 @@ class TodoController {
     }
 
     @GetMapping("{id}")
-    Todo getTodoById(@PathVariable String id) {
+    Optional<Todo> getTodoById(@PathVariable String id) {
         return todoService.getById(id);
     }
 
-    @PutMapping(path = {"{id}/update", "{id}"})
-    Todo update(@PathVariable String id, @RequestBody Todo todo) {
-        if (!todo.id().equals(id)) {
+    @PutMapping("/{id}")
+    Todo updateTodo(@PathVariable String id, @RequestBody Todo updateTodo) {
+        if (!updateTodo.id().equals(id)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The id in the url does not match the request body's id");
         }
-        return todoService.update(todo);
+        return todoService.updateTodo(id,updateTodo);
     }
 
     @DeleteMapping("{id}")

@@ -1,8 +1,11 @@
 package org.example.backend.Todo;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,12 +29,17 @@ class TodoService {
         return todoRepository.save(todoToSave);
     }
 
-    public Todo getById(String id) {
+    public Optional<Todo> getById(String id) {
         return todoRepository.getById(id);
     }
 
-    public Todo update(Todo todo) {
-        return todoRepository.update(todo);
+    public Todo updateTodo(String id, Todo updatedTodo ) {
+        Todo existingTodo = todoRepository.getById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found"));
+        Todo newTodo = new Todo(existingTodo.id(), updatedTodo.description(), updatedTodo.status());
+
+        // Save and return the new todo
+        return todoRepository.save(newTodo);
     }
 
     public void delete(String id) {

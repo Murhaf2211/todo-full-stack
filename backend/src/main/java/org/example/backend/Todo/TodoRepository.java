@@ -2,10 +2,7 @@ package org.example.backend.Todo;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 class TodoRepository {
@@ -21,8 +18,8 @@ class TodoRepository {
         return todoToSave;
     }
 
-    public Todo getById(String id) {
-        return todos.get(id);
+    public Optional <Todo> getById(String id) {
+        return Optional.ofNullable(todos.get(id));
     }
 
     public Todo update(Todo todo) {
