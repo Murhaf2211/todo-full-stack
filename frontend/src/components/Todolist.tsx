@@ -9,7 +9,7 @@ const TodoList: React.FC = () => {
     const [newTodo, setNewTodo] = useState<string>('');
     const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
     const [editText, setEditText] = useState<string>('');
-    const [status, setStatus] = useState<string>("OPEN");
+    const [status, setStatus] = useState<string>("");
 
     useEffect(() => {
         loadTodos();
@@ -34,6 +34,7 @@ const TodoList: React.FC = () => {
 
     const handleSaveEdit = async (todo: Todo) => {
         await axios.put(`/api/todo/${todo.id}`, { ...todo, description: editText, status});
+        handleStatusChange(todo, status);
         setEditingTodoId(null);
         setEditText("");
         loadTodos();
@@ -86,8 +87,7 @@ const TodoList: React.FC = () => {
                                             value={editText}
                                             onChange={(e) => setEditText(e.target.value)}
                                         />
-                                        <select
-                                            value={status}
+                                        <select value={status}
                                             onChange={(e) => setStatus(e.target.value)}
                                         >
                                             <option value="PENDING">Pending</option>
@@ -112,7 +112,7 @@ const TodoList: React.FC = () => {
                                         {/* Normal Display Mode */}
                                         <Card.Title>{todo.description}</Card.Title>
                                         <Card.Text>
-                                            <p>Status: {todo.status}</p>
+                                            <p>Status: {todo.status ||"PENDING"}</p>
                                         </Card.Text>
                                         <Button
                                             variant="danger"
